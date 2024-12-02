@@ -1,2 +1,2 @@
-# avaj_Launcher
+# avaj Launcher
 First Java project
