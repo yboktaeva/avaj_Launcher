@@ -1,13 +1,12 @@
 package yuboktae.observer;
 
 import yuboktae.models.Coordinates;
+import yuboktae.singleton.WeatherProvider;
 
 
-public class WeatherTower extends Tower{
+public class WeatherTower extends Tower {
     public String getWeather(Coordinates p_coordinates) {
-        String res;
-
-        return String res;
+        return WeatherProvider.getInstance().getCurrentWeather(p_coordinates);
     }
 
     public void changeWeather() {

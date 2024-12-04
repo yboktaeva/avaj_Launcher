@@ -2,18 +2,17 @@ package yuboktae.observer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.System;
 
 
 public class Tower {
-    private List <Flyable*> observers = new ArrayList<>();
+    private List <Flyable> observers = new ArrayList<>();
 
-    public void register(Flyable* p_flyable) {
+    public void register(Flyable p_flyable) {
         observers.add(p_flyable);
-        System.cout.println("Tower says: registered to weather tower")
+        System.out.println("Tower says: registered to weather tower");
     }
 
-    public void unregister(Flyable* p_flyable) {
+    public void unregister(Flyable p_flyable) {
         observers.remove(p_flyable);
 
     }
@@ -22,6 +21,5 @@ public class Tower {
         for (Flyable observer : observers) {
             observer.updateConditions();
         }
-        
     }
 }
