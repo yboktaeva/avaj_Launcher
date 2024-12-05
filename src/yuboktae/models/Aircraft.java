@@ -1,7 +1,9 @@
 package yuboktae.models;
 
+import yuboktae.observer.Flyable;
 
-public class Aircraft {
+
+public class Aircraft extends Flyable {
     protected long id;
     protected String name;
     protected Coordinates coordinates;
@@ -10,5 +12,10 @@ public class Aircraft {
         this.id = p_id;
         this.name = p_name;
         this.coordinates = p_coordinate;
+    }
+
+    @Override
+    public void updateConditions(){
+        System.out.println("Aircraft is updating its conditions.");
     }
 }

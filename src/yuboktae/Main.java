@@ -3,6 +3,9 @@ package yuboktae;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import yuboktae.factory.AircraftFactory;
+import yuboktae.models.Coordinates;
+import yuboktae.observer.Flyable;
 
 
 /**
@@ -25,7 +28,20 @@ public class Main {
         }
         while(readFromFile.hasNextLine()) {
             String line = readFromFile.nextLine();
-            System.out.println(line);
+            String[] parts = line.split(" ");
+            if (parts.length != 5) {
+                System.err.println("Error: Invalid input format" + line);
+                System.exit(1);
+            }
+            String type = parts[0];
+            String name = parts[1];
+            int longitude = Integer.parseInt(parts[2]);
+            int latitude = Integer.parseInt(parts[3]);
+            int height = Integer.parseInt(parts[4]);
+
+            Coordinates coordinates = new Coordinates(longitude, latitude, height);
+            AircraftFactory factory = AircraftFactory.getInstance();
+            Flyable aircraft = factory.newAircraft(type, name, coordinates);
         }
         readFromFile.close();
     }

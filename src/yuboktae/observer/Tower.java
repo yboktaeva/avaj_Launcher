@@ -9,7 +9,7 @@ public class Tower {
 
     public void register(Flyable p_flyable) {
         observers.add(p_flyable);
-        System.out.println("Tower says: registered to weather tower");
+        System.out.println("Tower says:" + p_flyable.name  "registered to weather tower");
     }
 
     public void unregister(Flyable p_flyable) {
