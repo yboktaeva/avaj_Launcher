@@ -62,7 +62,8 @@ public class Main {
                     Coordinates coordinates = new Coordinates(longitude, latitude, height);
                     AircraftFactory factory = AircraftFactory.getInstance();
                     Flyable aircraft = factory.newAircraft(type, name, coordinates);
-                    new Tower().register(aircraft);
+                    Tower tower = new Tower();
+                    tower.register(aircraft);
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Invalid number format");
                 }
