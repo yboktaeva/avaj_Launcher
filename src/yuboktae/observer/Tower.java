@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public class Tower {
-    private List <Flyable> observers = new ArrayList<Flyable>();
+    private List <Flyable> observers = new ArrayList<>();
 
     public void register(Flyable p_flyable) {
         if (!observers.contains(p_flyable)) {

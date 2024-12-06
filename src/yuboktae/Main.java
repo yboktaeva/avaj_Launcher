@@ -6,7 +6,6 @@ import java.util.Scanner;
 import yuboktae.factory.AircraftFactory;
 import yuboktae.models.Coordinates;
 import yuboktae.observer.Flyable;
-import yuboktae.observer.Tower;
 import yuboktae.observer.WeatherTower;
 import yuboktae.singleton.WeatherProvider;
 
@@ -57,6 +56,7 @@ public class Main {
                 }
                 try {
                     Flyable aircraft = getAircraft(parts);
+                    tower = new WeatherTower();
                     tower.register(aircraft);
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Invalid number format");
