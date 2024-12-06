@@ -4,22 +4,17 @@ import yuboktae.models.Coordinates;
 
 
 public class WeatherProvider {
-    private static WeatherProvider instance;
+    private static WeatherProvider weatherProvider;
 
-    private static final String[] weather = {
-        "RAIN",
-        "FOG",
-        "SUN",
-        "SNOW",
-    };
+    private static final String[] weather = {"RAIN", "FOG", "SUN", "SNOW"};
 
     private WeatherProvider() {}
 
-    public static WeatherProvider getInstance() {
-        if (instance == null) {
-            instance = new WeatherProvider();
+    public static WeatherProvider getWeatherProvider() {
+        if (weatherProvider == null) {
+            weatherProvider = new WeatherProvider();
         }
-        return instance;
+        return weatherProvider;
     }
 
     public String getCurrentWeather(Coordinates p_coordinates) {

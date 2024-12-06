@@ -7,6 +7,8 @@ import yuboktae.factory.AircraftFactory;
 import yuboktae.models.Coordinates;
 import yuboktae.observer.Flyable;
 import yuboktae.observer.Tower;
+import yuboktae.observer.WeatherTower;
+import yuboktae.singleton.WeatherProvider;
 
 
 /**
@@ -14,6 +16,9 @@ import yuboktae.observer.Tower;
 * The first command line argument is the input file name
 */
 public class Main {
+    private static int simulatorNumber;
+    private static WeatherTower tower;
+
     public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Invalid command line, exactly one argument required");
@@ -29,22 +34,20 @@ public class Main {
         }
     }
 
-    private static void parseAndProcessFile(String filePath) throws FileNotFoundException{
+    private static void parseAndProcessFile(String filePath) throws FileNotFoundException {
         try(Scanner readFromFile = new Scanner(new File(filePath))) {
-            int count;
             try {
                 if (!readFromFile.hasNextLine()) {
                     throw new IllegalArgumentException("Input file is empty");
                 }
                 String firstLine = readFromFile.nextLine().trim();
-                count = Integer.parseInt(firstLine);
-                if (count <= 0) {
+                simulatorNumber = Integer.parseInt(firstLine);
+                if (simulatorNumber < 0) {
                     throw new IllegalArgumentException("First line must be a positive integer");
                 }
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("First line must be a valid positive integer");
             }
-            System.out.println(count);
             while(readFromFile.hasNextLine()) {
                 String line = readFromFile.nextLine().trim();
                 if (line.isEmpty()) continue;
@@ -53,21 +56,27 @@ public class Main {
                     throw new IllegalArgumentException("Error: Invalid input format");
                 }
                 try {
-                    String type = parts[0];
-                    String name = parts[1];
-                    int longitude = Integer.parseInt(parts[2]);
-                    int latitude = Integer.parseInt(parts[3]);
-                    int height = Integer.parseInt(parts[4]);
-                
-                    Coordinates coordinates = new Coordinates(longitude, latitude, height);
-                    AircraftFactory factory = AircraftFactory.getInstance();
-                    Flyable aircraft = factory.newAircraft(type, name, coordinates);
-                    Tower tower = new Tower();
+                    Flyable aircraft = getAircraft(parts);
                     tower.register(aircraft);
                 } catch (NumberFormatException e) {
                     throw new IllegalArgumentException("Invalid number format");
                 }
             }
+            while (simulatorNumber-- > 0) {
+                tower.changeWeather();
+            }
         }
+    }
+
+    private static Flyable getAircraft(String[] parts) {
+        String type = parts[0];
+        String name = parts[1];
+        int longitude = Integer.parseInt(parts[2]);
+        int latitude = Integer.parseInt(parts[3]);
+        int height = Integer.parseInt(parts[4]);
+
+        Coordinates coordinates = new Coordinates(longitude, latitude, height);
+        AircraftFactory factory = AircraftFactory.getAircraftFactory();
+        return factory.newAircraft(type, name, coordinates);
     }
 }

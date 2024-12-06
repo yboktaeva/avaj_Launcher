@@ -5,16 +5,16 @@ import yuboktae.observer.Flyable;
 
 
 public class AircraftFactory {
-    private static AircraftFactory instance;
+    private static AircraftFactory aircraftFactory;
     private static long counter = 0;
 
     private AircraftFactory() {}
 
-    public static AircraftFactory getInstance() {
-        if (instance == null) {
-            instance = new AircraftFactory();
+    public static AircraftFactory getAircraftFactory() {
+        if (aircraftFactory == null) {
+            aircraftFactory = new AircraftFactory();
         }
-        return instance;
+        return aircraftFactory;
     }
 
     private static long generateId() {

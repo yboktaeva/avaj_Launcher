@@ -5,11 +5,13 @@ import java.util.List;
 
 
 public class Tower {
-    private List <Flyable> observers = new ArrayList<>();
+    private List <Flyable> observers = new ArrayList<Flyable>();
 
     public void register(Flyable p_flyable) {
-        observers.add(p_flyable);
-        System.out.println("Tower says: " + p_flyable + " registered to weather tower");
+        if (!observers.contains(p_flyable)) {
+            observers.add(p_flyable);
+            System.out.println("Tower says: " + p_flyable + " registered to weather tower");
+        }
     }
 
     public void unregister(Flyable p_flyable) {

@@ -4,6 +4,7 @@
 *.ctxt
 
 .vscode/
+.idea/
 
 .mtj.tmp/
 
