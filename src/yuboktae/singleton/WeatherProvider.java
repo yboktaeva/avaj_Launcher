@@ -1,10 +1,12 @@
 package yuboktae.singleton;
+
 import yuboktae.models.Coordinates;
 
 
 public class WeatherProvider {
     private static WeatherProvider instance;
-    private static final String[] weather ={
+
+    private static final String[] weather = {
         "RAIN",
         "FOG",
         "SUN",

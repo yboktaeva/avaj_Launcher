@@ -15,7 +15,5 @@ public class Aircraft extends Flyable {
     }
 
     @Override
-    public void updateConditions(){
-        System.out.println("Aircraft is updating its conditions.");
-    }
+    public void updateConditions(){}
 }

@@ -6,7 +6,8 @@ public class JetPlane extends Aircraft{
         super(p_id, p_name, p_coordinate);
     }
 
-    public void updateConditions(){
+    @Override
+    public void updateConditions() {
         
     }
 }
