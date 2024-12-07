@@ -30,7 +30,6 @@ public class AircraftFactory {
             case "helicopter" -> aircraft =  new Helicopter(uniqueId, p_name, p_coordinates);
             default -> throw new IllegalArgumentException("Unknown aircraft" + p_type);
         }
-        System.out.println(p_type + "#" + p_name + "(" + uniqueId + ") was created");
         return aircraft;
     }
 }

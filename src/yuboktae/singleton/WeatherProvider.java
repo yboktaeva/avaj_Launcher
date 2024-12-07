@@ -1,7 +1,7 @@
 package yuboktae.singleton;
 
 import yuboktae.models.Coordinates;
-
+import java.util.Random;
 
 public class WeatherProvider {
     private static WeatherProvider weatherProvider;
@@ -18,7 +18,11 @@ public class WeatherProvider {
     }
 
     public String getCurrentWeather(Coordinates p_coordinates) {
-        int index = (p_coordinates.getLongitude() + p_coordinates.getLatitude() + p_coordinates.getHeight()) % weather.length;
+        Random random = new Random();
+        int index = (p_coordinates.getLongitude()
+            + p_coordinates.getLatitude()
+            + p_coordinates.getHeight()
+            + random.nextInt(100)) % weather.length;
         return weather[index];
     }
 }
