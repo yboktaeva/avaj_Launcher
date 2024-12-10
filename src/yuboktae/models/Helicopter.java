@@ -1,9 +1,8 @@
 package yuboktae.models;
 
-import yuboktae.observer.WeatherTower;
+import yuboktae.singleton.Logger;
 
 public class Helicopter extends Aircraft {
-    private WeatherTower weatherTower;
 
     public Helicopter(long p_id, String p_name, Coordinates p_coordinate) {
         super(p_id, p_name, p_coordinate);
@@ -11,42 +10,48 @@ public class Helicopter extends Aircraft {
     
     @Override
     public void updateConditions(){
-        String weather = weatherTower.getWeather(coordinates);
-        int latitude = coordinates.getLatitude();
-        int longitude = coordinates.getLongitude();
-        int height = coordinates.getHeight();
-        String message = "Helicopter#" + this.name + "(" + this.id + ") ";
+        if (weatherTower == null) {
+            throw new IllegalStateException("WeatherTower is not set");
+        }
+        String weather = weatherTower.getWeather(this.coordinates);
+        int latitude = this.coordinates.getLatitude();
+        int longitude = this.coordinates.getLongitude();
+        int height = this.coordinates.getHeight();
+        String message = "Helicopter#" + this.name + "(" + this.id + "): ";
         switch (weather) {
             case "SUN" -> {
                 longitude += 10;
                 height += 2;
-                message += "";
+                message += "SUN";
                 break;
             }
             case "RAIN" -> {
                 longitude += 5;
-                message += "";
+                message += "RAIN";
                 break;
             }
             case "FOG" -> {
                 longitude += 1;
-                message += "";
+                message += "FOG";
                 break;
             }
             case "SNOW" -> {
                 height -= 12;
-                message += "";
+                message += "SNOW";
                 break;
             }
         }
-        weatherTower.logMessage(message);
-        if (height <= 0) {
+        Logger.getLogger(message);
+        this.coordinates.setLongitude(longitude);
+        this.coordinates.setHeight(height);
+        this.coordinates.setLatitude(latitude);
+        if (this.coordinates.getHeight() <= 0) {
             weatherTower.unregister(this);
-            weatherTower.logMessage(String.format("Helicopter#%s(%d) landing.",
+            Logger.getLogger(String.format("Helicopter#%s(%d) landing.",
                 this.name,
                 this.id
             ));
-            weatherTower.logMessage(String.format("Tower says: Helicopter#%s(%d) unregistered from weather tower.",
+            Logger.getLogger(String.format("Tower says: Helicopter#%s(%d) unregistered from weather tower.",
                 this.name,
                 this.id
             ));

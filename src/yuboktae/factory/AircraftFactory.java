@@ -5,23 +5,13 @@ import yuboktae.observer.Flyable;
 
 
 public class AircraftFactory {
-    private static AircraftFactory aircraftFactory;
     private static long counter = 0;
-
-    private AircraftFactory() {}
-
-    public static AircraftFactory getAircraftFactory() {
-        if (aircraftFactory == null) {
-            aircraftFactory = new AircraftFactory();
-        }
-        return aircraftFactory;
-    }
 
     private static long generateId() {
         return ++counter;
     }
 
-    public Flyable newAircraft(String p_type, String p_name, Coordinates p_coordinates) {
+    public static Flyable newAircraft(String p_type, String p_name, Coordinates p_coordinates) {
         long uniqueId = generateId();
         Flyable aircraft;
         switch (p_type.toLowerCase()) {

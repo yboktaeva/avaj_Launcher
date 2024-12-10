@@ -1,7 +1,8 @@
 package yuboktae.singleton;
 
-import yuboktae.models.Coordinates;
 import java.util.Random;
+import yuboktae.models.Coordinates;
+
 
 public class WeatherProvider {
     private static WeatherProvider weatherProvider;

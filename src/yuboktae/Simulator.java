@@ -8,6 +8,7 @@ import yuboktae.factory.AircraftFactory;
 import yuboktae.models.Coordinates;
 import yuboktae.observer.Flyable;
 import yuboktae.observer.WeatherTower;
+import yuboktae.singleton.Logger;
 
 
 /**
@@ -16,24 +17,29 @@ import yuboktae.observer.WeatherTower;
 */
 public class Simulator {
     private static int simulationNumber;
-    private static WeatherTower weatherTower;
-
+    private WeatherTower weatherTower;
+    private Logger logger = null;
+    private Simulator() {}
+    
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.out.println("Invalid command line, exactly one argument required");
             System.exit(1);
         }
+        Simulator simulator = new Simulator();
 
         String filePath = args[0];
         try {
-            parseAndProcessFile(filePath);
+            simulator.parseAndProcessFile(filePath);
         } catch (FileNotFoundException | IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
             System.exit(1);
         }
     }
-
-    private static void parseAndProcessFile(String filePath) throws IOException {
+    
+    private void parseAndProcessFile(String filePath) throws IOException {
+        this.weatherTower = new WeatherTower();
+        this.logger = Logger.getLogger("simulation.txt");
         try(Scanner readFromFile = new Scanner(new File(filePath))) {
             try {
                 if (!readFromFile.hasNextLine()) {
@@ -55,34 +61,40 @@ public class Simulator {
                     throw new IllegalArgumentException("Error: Invalid input format");
                 }
                 try {
-                    Flyable aircraft = getAircraft(subStrings);
-                    weatherTower = new WeatherTower();
-                    aircraft.registerTower(weatherTower);
-                    weatherTower.register(aircraft);
-                    weatherTower.logMessage(String.format("Tower says: %s#%s(%d) registered to weather tower.",
+                    String type = subStrings[0];
+                    String name = subStrings[1];
+                    int longitude = Integer.parseInt(subStrings[2]);
+                    int latitude = Integer.parseInt(subStrings[3]);
+                    int height = Integer.parseInt(subStrings[4]);
+
+                    Coordinates coordinates = new Coordinates(longitude, latitude, height);
+                    Flyable aircraft =  AircraftFactory.newAircraft(type, name, coordinates);
+                    aircraft.registerTower(this.weatherTower);
+                    this.weatherTower.register(aircraft);
+                    this.logger.log(String.format("Tower says: %s#%s() registered to weather tower.",
                         subStrings[0],
-                        aircraft.getName(),
-                        aircraft.getId()
+                        name
                         ));
-                    while (simulationNumber-- > 0) {
-                        weatherTower.changeWeather();
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid number format");
                     }
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Invalid number format");
                 }
+            while (simulationNumber-- > 0) {
+                this.weatherTower.changeWeather();
             }
+            Logger.getLogger("simulation.txt").close();
         }
     }
 
-    private static Flyable getAircraft(String[] subStrings) {
-        String type = subStrings[0];
-        String name = subStrings[1];
-        int longitude = Integer.parseInt(subStrings[2]);
-        int latitude = Integer.parseInt(subStrings[3]);
-        int height = Integer.parseInt(subStrings[4]);
+    // private static Flyable getAircraft(String[] subStrings) {
+    //     String type = subStrings[0];
+    //     String name = subStrings[1];
+    //     int longitude = Integer.parseInt(subStrings[2]);
+    //     int latitude = Integer.parseInt(subStrings[3]);
+    //     int height = Integer.parseInt(subStrings[4]);
 
-        Coordinates coordinates = new Coordinates(longitude, latitude, height);
-        AircraftFactory factory = AircraftFactory.getAircraftFactory();
-        return factory.newAircraft(type, name, coordinates);
-    }
+    //     Coordinates coordinates = new Coordinates(longitude, latitude, height);
+    //     AircraftFactory factory = AircraftFactory.getAircraftFactory();
+    //     return factory.newAircraft(type, name, coordinates);
+    // }
 }
