@@ -1,4 +1,3 @@
-
 package yuboktae;
 
 import java.io.File;
@@ -9,13 +8,13 @@ import java.io.PrintWriter;
 
  /*Not in UML */
 public class Tracker {
-    private static File newfile;
+    private static File newFile;
     private static PrintWriter writer;
 
-    Tracker() {
+    public Tracker()  {
         try {
-            newfile = new File("simulation.txt");
-            FileWriter fw = new FileWriter(newfile, true);
+            newFile = new File("simulation.txt");
+            FileWriter fw = new FileWriter(newFile, true);
             writer = new PrintWriter(fw);
         } catch (IOException e) {
             throw new RuntimeException(e);
