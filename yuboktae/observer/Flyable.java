@@ -10,5 +10,6 @@ public abstract class Flyable {
         this.weatherTower = p_tower;
     }
 
+    /*Not in UML */
     public abstract String getFullName();
 }

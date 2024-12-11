@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
+ /*Not in UML */
 public class Logger {
     private static File newfile;
     private static PrintWriter writer;

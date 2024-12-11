@@ -24,6 +24,7 @@ public class Coordinates {
         return height;
     }
 
+     /*Not in UML */
     public void setLongitude(int longitude) {
         this.longitude = longitude;
     }

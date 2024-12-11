@@ -7,6 +7,7 @@ import yuboktae.observer.Flyable;
 public class AircraftFactory {
     private static long counter = 0;
 
+    /*Not in UML */
     private static long generateId() {
         return ++counter;
     }

@@ -3,11 +3,10 @@ package yuboktae.models;
 import yuboktae.Logger;
 
 
-public class JetPlane extends Aircraft {
-
-    public JetPlane(long p_id, String p_name, Coordinates p_coordinate) {
+public class Baloon extends Aircraft {
+    public Baloon(long p_id, String p_name, Coordinates p_coordinate) {
         super(p_id, p_name, p_coordinate);
-        this.type = "Jetplane";
+        this.type = "Baloon";
     }
 
     @Override
@@ -15,30 +14,30 @@ public class JetPlane extends Aircraft {
         if (weatherTower == null) {
             throw new IllegalStateException("WeatherTower is not set");
         }
-        String weather = weatherTower.getWeather(this.coordinates);
+        String weather = this.weatherTower.getWeather(this.coordinates);
         int latitude = this.coordinates.getLatitude();
         int longitude = this.coordinates.getLongitude();
         int height = this.coordinates.getHeight();
         String message = this.getFullName();
         switch (weather) {
             case "SUN" -> {
-                latitude += 10;
-                height += 2;
+                longitude += 2;
+                height += 4;
                 message += ": SUN";
                 break;
             }
             case "RAIN" -> {
-                latitude += 5;
+                height -= 5;
                 message += ": RAIN";
                 break;
             }
             case "FOG" -> {
-                latitude += 1;
+                height -= 3;
                 message += ": FOG";
                 break;
             }
             case "SNOW" -> {
-                height -= 7;
+                height -= 15;
                 message += ": SNOW";
                 break;
             }
@@ -48,7 +47,7 @@ public class JetPlane extends Aircraft {
         this.coordinates.setHeight(height);
         this.coordinates.setLatitude(latitude);
         if (this.coordinates.getHeight() <= 0) {
-            weatherTower.unregister(this);
+            this.weatherTower.unregister(this);
             Logger.log(String.format("%s landing.",
                 this.getFullName()
             ));

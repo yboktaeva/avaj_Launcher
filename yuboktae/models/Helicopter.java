@@ -2,41 +2,42 @@ package yuboktae.models;
 
 import yuboktae.Logger;
 
-public class Baloon extends Aircraft {
-    public Baloon(long p_id, String p_name, Coordinates p_coordinate) {
+
+public class Helicopter extends Aircraft {
+    public Helicopter(long p_id, String p_name, Coordinates p_coordinate) {
         super(p_id, p_name, p_coordinate);
-        this.type = "Baloon";
+        this.type = "Helicopter";
     }
 
     @Override
-    public void updateConditions() {
+    public void updateConditions(){
         if (weatherTower == null) {
             throw new IllegalStateException("WeatherTower is not set");
         }
-        String weather = this.weatherTower.getWeather(this.coordinates);
+        String weather = weatherTower.getWeather(this.coordinates);
         int latitude = this.coordinates.getLatitude();
         int longitude = this.coordinates.getLongitude();
         int height = this.coordinates.getHeight();
         String message = this.getFullName();
         switch (weather) {
             case "SUN" -> {
-                longitude += 2;
-                height += 4;
+                longitude += 10;
+                height += 2;
                 message += ": SUN";
                 break;
             }
             case "RAIN" -> {
-                height -= 5;
+                longitude += 5;
                 message += ": RAIN";
                 break;
             }
             case "FOG" -> {
-                height -= 3;
+                longitude += 1;
                 message += ": FOG";
                 break;
             }
             case "SNOW" -> {
-                height -= 15;
+                height -= 12;
                 message += ": SNOW";
                 break;
             }
@@ -46,7 +47,7 @@ public class Baloon extends Aircraft {
         this.coordinates.setHeight(height);
         this.coordinates.setLatitude(latitude);
         if (this.coordinates.getHeight() <= 0) {
-            this.weatherTower.unregister(this);
+            weatherTower.unregister(this);
             Logger.log(String.format("%s landing.",
                 this.getFullName()
             ));

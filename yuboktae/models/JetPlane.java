@@ -2,15 +2,15 @@ package yuboktae.models;
 
 import yuboktae.Logger;
 
-public class Helicopter extends Aircraft {
 
-    public Helicopter(long p_id, String p_name, Coordinates p_coordinate) {
+public class JetPlane extends Aircraft {
+    public JetPlane(long p_id, String p_name, Coordinates p_coordinate) {
         super(p_id, p_name, p_coordinate);
-        this.type = "Helicopter";
+        this.type = "Jetplane";
     }
 
     @Override
-    public void updateConditions(){
+    public void updateConditions() {
         if (weatherTower == null) {
             throw new IllegalStateException("WeatherTower is not set");
         }
@@ -21,23 +21,23 @@ public class Helicopter extends Aircraft {
         String message = this.getFullName();
         switch (weather) {
             case "SUN" -> {
-                longitude += 10;
+                latitude += 10;
                 height += 2;
                 message += ": SUN";
                 break;
             }
             case "RAIN" -> {
-                longitude += 5;
+                latitude += 5;
                 message += ": RAIN";
                 break;
             }
             case "FOG" -> {
-                longitude += 1;
+                latitude += 1;
                 message += ": FOG";
                 break;
             }
             case "SNOW" -> {
-                height -= 12;
+                height -= 7;
                 message += ": SNOW";
                 break;
             }

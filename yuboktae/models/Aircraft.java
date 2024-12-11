@@ -16,6 +16,7 @@ public class Aircraft extends Flyable {
         this.type = "Default";
     }
 
+    /*Not in UML */
     @Override
     public String getFullName() {
         return (String.format("%s#%s(%d)",
