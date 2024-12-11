@@ -1,13 +1,14 @@
 package yuboktae.models;
 
-import yuboktae.singleton.Logger;
+import yuboktae.Logger;
 
 public class Helicopter extends Aircraft {
 
     public Helicopter(long p_id, String p_name, Coordinates p_coordinate) {
         super(p_id, p_name, p_coordinate);
+        this.type = "Helicopter";
     }
-    
+
     @Override
     public void updateConditions(){
         if (weatherTower == null) {
@@ -17,43 +18,41 @@ public class Helicopter extends Aircraft {
         int latitude = this.coordinates.getLatitude();
         int longitude = this.coordinates.getLongitude();
         int height = this.coordinates.getHeight();
-        String message = "Helicopter#" + this.name + "(" + this.id + "): ";
+        String message = this.getFullName();
         switch (weather) {
             case "SUN" -> {
                 longitude += 10;
                 height += 2;
-                message += "SUN";
+                message += ": SUN";
                 break;
             }
             case "RAIN" -> {
                 longitude += 5;
-                message += "RAIN";
+                message += ": RAIN";
                 break;
             }
             case "FOG" -> {
                 longitude += 1;
-                message += "FOG";
+                message += ": FOG";
                 break;
             }
             case "SNOW" -> {
                 height -= 12;
-                message += "SNOW";
+                message += ": SNOW";
                 break;
             }
         }
-        Logger.getLogger(message);
+        Logger.log(message);
         this.coordinates.setLongitude(longitude);
         this.coordinates.setHeight(height);
         this.coordinates.setLatitude(latitude);
         if (this.coordinates.getHeight() <= 0) {
             weatherTower.unregister(this);
-            Logger.getLogger(String.format("Helicopter#%s(%d) landing.",
-                this.name,
-                this.id
+            Logger.log(String.format("%s landing.",
+                this.getFullName()
             ));
-            Logger.getLogger(String.format("Tower says: Helicopter#%s(%d) unregistered from weather tower.",
-                this.name,
-                this.id
+            Logger.log(String.format("Tower says: %s unregistered from weather tower.",
+                this.getFullName()
             ));
         }
     }

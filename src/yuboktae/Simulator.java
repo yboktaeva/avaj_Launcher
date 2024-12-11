@@ -8,7 +8,6 @@ import yuboktae.factory.AircraftFactory;
 import yuboktae.models.Coordinates;
 import yuboktae.observer.Flyable;
 import yuboktae.observer.WeatherTower;
-import yuboktae.singleton.Logger;
 
 
 /**
@@ -18,7 +17,8 @@ import yuboktae.singleton.Logger;
 public class Simulator {
     private static int simulationNumber;
     private WeatherTower weatherTower;
-    private Logger logger = null;
+    private Logger logger = new Logger();
+
     private Simulator() {}
     
     public static void main(String[] args) throws IOException {
@@ -38,8 +38,7 @@ public class Simulator {
     }
     
     private void parseAndProcessFile(String filePath) throws IOException {
-        this.weatherTower = new WeatherTower();
-        this.logger = Logger.getLogger("simulation.txt");
+        weatherTower = new WeatherTower();
         try(Scanner readFromFile = new Scanner(new File(filePath))) {
             try {
                 if (!readFromFile.hasNextLine()) {
@@ -69,12 +68,11 @@ public class Simulator {
 
                     Coordinates coordinates = new Coordinates(longitude, latitude, height);
                     Flyable aircraft =  AircraftFactory.newAircraft(type, name, coordinates);
-                    aircraft.registerTower(this.weatherTower);
-                    this.weatherTower.register(aircraft);
-                    this.logger.log(String.format("Tower says: %s#%s() registered to weather tower.",
-                        subStrings[0],
-                        name
-                        ));
+                    aircraft.registerTower(weatherTower);
+                    weatherTower.register(aircraft);
+                    Logger.log(String.format("Tower says: %s registered to weather tower.",
+                            aircraft.getFullName()
+                    ));
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException("Invalid number format");
                     }
@@ -82,7 +80,7 @@ public class Simulator {
             while (simulationNumber-- > 0) {
                 this.weatherTower.changeWeather();
             }
-            Logger.getLogger("simulation.txt").close();
+            Logger.closeFile();
         }
     }
 

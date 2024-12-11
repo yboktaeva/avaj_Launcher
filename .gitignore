@@ -1,3 +1,4 @@
+simulation.txt
 *.class
 *.log
 
@@ -7,7 +8,7 @@
 .idea/
 
 .mtj.tmp/
-
+.iml
 # Package Files #
 *.jar
 *.war
