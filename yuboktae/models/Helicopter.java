@@ -1,6 +1,6 @@
 package yuboktae.models;
 
-import yuboktae.Logger;
+import yuboktae.Tracker;
 
 
 public class Helicopter extends Aircraft {
@@ -23,35 +23,36 @@ public class Helicopter extends Aircraft {
             case "SUN" -> {
                 longitude += 10;
                 height += 2;
-                message += ": SUN";
+                message += ": It\'s so sunny, even the helicopter\'s blades are getting a tan!";
                 break;
             }
             case "RAIN" -> {
                 longitude += 5;
-                message += ": RAIN";
+                message += ": Rainy days: when your helicopter becomes a flying water park!";
                 break;
             }
             case "FOG" -> {
                 longitude += 1;
-                message += ": FOG";
+                message += ": Foggy days: when your helicopter thinks it\'s auditioning for a horror movie!";
                 break;
             }
             case "SNOW" -> {
                 height -= 12;
-                message += ": SNOW";
+                message += ": My rotor is going to freeze! Can we get some heated blankets up here?";
                 break;
             }
         }
-        Logger.log(message);
+        Tracker.log(message);
         this.coordinates.setLongitude(longitude);
         this.coordinates.setHeight(height);
         this.coordinates.setLatitude(latitude);
         if (this.coordinates.getHeight() <= 0) {
             weatherTower.unregister(this);
-            Logger.log(String.format("%s landing.",
-                this.getFullName()
+            Tracker.log(String.format("%s landing. At %s.",
+                this.getFullName(),
+                this.coordinates.getCoordinates()
             ));
-            Logger.log(String.format("Tower says: %s unregistered from weather tower.",
+            Tracker.log(String.format("Tower says: %s unregistered from weather tower.",
                 this.getFullName()
             ));
         }

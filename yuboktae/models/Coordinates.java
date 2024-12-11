@@ -25,15 +25,28 @@ public class Coordinates {
     }
 
      /*Not in UML */
-    public void setLongitude(int longitude) {
-        this.longitude = longitude;
+    public void setLongitude(int newLongitude) {
+        this.longitude = newLongitude;
     }
 
-    public void setLatitude(int latitude) {
-        this.latitude = latitude;
+    public void setLatitude(int newLatitude) {
+        this.latitude = newLatitude;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    public void setHeight(int newHeight) {
+        if (newHeight < 0) {
+            newHeight = 0;
+        } else if (newHeight > 100) {
+            newHeight = 100;
+        }
+        this.height = newHeight;
+    }
+
+    public String getCoordinates() {
+        return (String.format("longitude: %d, latitude: %d, height: %d",
+            longitude,
+            latitude,
+            height
+        ));
     }
 }

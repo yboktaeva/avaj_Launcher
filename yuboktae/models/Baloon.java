@@ -1,6 +1,6 @@
 package yuboktae.models;
 
-import yuboktae.Logger;
+import yuboktae.Tracker;
 
 
 public class Baloon extends Aircraft {
@@ -23,35 +23,36 @@ public class Baloon extends Aircraft {
             case "SUN" -> {
                 longitude += 2;
                 height += 4;
-                message += ": SUN";
+                message += ": Let\'s soak up the sun and capture those Instagram moments!";
                 break;
             }
             case "RAIN" -> {
                 height -= 5;
-                message += ": RAIN";
+                message += ": Damn you rain! You\'ve turned my balloon into a soggy sponge!";
                 break;
             }
             case "FOG" -> {
                 height -= 3;
-                message += ": FOG";
+                message += ": Is this fog or am I just lost in my own thoughts?";
                 break;
             }
             case "SNOW" -> {
                 height -= 15;
-                message += ": SNOW";
+                message += ": Snow in the air? Time to see if my balloon can float like a snowflake!";
                 break;
             }
         }
-        Logger.log(message);
+        Tracker.log(message);
         this.coordinates.setLongitude(longitude);
-        this.coordinates.setHeight(height);
         this.coordinates.setLatitude(latitude);
+        this.coordinates.setHeight(height);
         if (this.coordinates.getHeight() <= 0) {
             this.weatherTower.unregister(this);
-            Logger.log(String.format("%s landing.",
-                this.getFullName()
+            Tracker.log(String.format("%s landing. At %s.",
+                this.getFullName(),
+                this.coordinates.getCoordinates()
             ));
-            Logger.log(String.format("Tower says: %s unregistered from weather tower.",
+            Tracker.log(String.format("Tower says: %s unregistered from weather tower.",
                 this.getFullName()
             ));
         }

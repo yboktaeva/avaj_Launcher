@@ -17,7 +17,7 @@ import yuboktae.observer.WeatherTower;
 public class Simulator {
     private static int simulationNumber;
     private WeatherTower weatherTower;
-    private Logger logger = new Logger();
+    private Tracker tracker = new Tracker();
 
     private Simulator() {}
     
@@ -31,68 +31,65 @@ public class Simulator {
         String filePath = args[0];
         try {
             simulator.parseAndProcessFile(filePath);
-        } catch (FileNotFoundException | IllegalArgumentException e) {
+        } catch (FileNotFoundException | SimulationException | IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
             System.exit(1);
         }
     }
     
-    private void parseAndProcessFile(String filePath) throws IOException {
+    private void parseAndProcessFile(String filePath) throws SimulationException, FileNotFoundException {
         weatherTower = new WeatherTower();
-        try(Scanner readFromFile = new Scanner(new File(filePath))) {
-            try {
-                if (!readFromFile.hasNextLine()) {
-                    throw new IllegalArgumentException("Input file is empty");
-                }
-                String firstLine = readFromFile.nextLine().trim();
-                simulationNumber = Integer.parseInt(firstLine);
-                if (simulationNumber < 0) {
-                    throw new IllegalArgumentException("First line must be a positive integer");
-                }
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("First line must be a valid positive integer");
+        try (Scanner readFromFile = new Scanner(new File(filePath))) {
+            if (!readFromFile.hasNextLine()) {
+                throw new SimulationException("Input file is empty");
+            }
+            String firstLine = readFromFile.nextLine().trim();
+            if (firstLine.isEmpty()) {
+                throw new SimulationException("First line cannot be empty");
+            }
+            simulationNumber = Integer.parseInt(firstLine);
+            if (simulationNumber < 0) {
+                throw new SimulationException("First line must be a positive integer");
+            }
+            if (!readFromFile.hasNextLine()) {
+                throw new SimulationException("No aircraft data provided.");
             }
             while(readFromFile.hasNextLine()) {
                 String line = readFromFile.nextLine().trim();
                 if (line.isEmpty()) continue;
                 String[] subStrings = line.split(" ");
                 if (subStrings.length != 5) {
-                    throw new IllegalArgumentException("Error: Invalid input format");
+                    throw new SimulationException("Error: Invalid input format");
                 }
-                try {
-                    String type = subStrings[0];
-                    String name = subStrings[1];
-                    int longitude = Integer.parseInt(subStrings[2]);
-                    int latitude = Integer.parseInt(subStrings[3]);
-                    int height = Integer.parseInt(subStrings[4]);
-
-                    Coordinates coordinates = new Coordinates(longitude, latitude, height);
-                    Flyable aircraft =  AircraftFactory.newAircraft(type, name, coordinates);
-                    aircraft.registerTower(weatherTower);
-                    weatherTower.register(aircraft);
-                    Logger.log(String.format("Tower says: %s registered to weather tower.",
-                            aircraft.getFullName()
-                    ));
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Invalid number format");
-                    }
-                }
+                Flyable aircraft = getAircraft(subStrings);
+                aircraft.registerTower(weatherTower);
+                weatherTower.register(aircraft);
+                Tracker.log(String.format("Tower says: %s registered to weather tower.",
+                        aircraft.getFullName()
+                ));
+            }
+            readFromFile.close();
+            Tracker.log("START OF SIMULATION");
             while (simulationNumber-- > 0) {
                 this.weatherTower.changeWeather();
             }
-            Logger.closeFile();
+            Tracker.log("END OF SIMULATION");
+            Tracker.closeFile();
+        } catch (SimulationException e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
 
-    // private static Flyable getAircraft(String[] subStrings) {
-    //     String type = subStrings[0];
-    //     String name = subStrings[1];
-    //     int longitude = Integer.parseInt(subStrings[2]);
-    //     int latitude = Integer.parseInt(subStrings[3]);
-    //     int height = Integer.parseInt(subStrings[4]);
-
-    //     Coordinates coordinates = new Coordinates(longitude, latitude, height);
-    //     AircraftFactory factory = AircraftFactory.getAircraftFactory();
-    //     return factory.newAircraft(type, name, coordinates);
-    // }
+    private static Flyable getAircraft(String[] subStrings) throws SimulationException {
+        String type = subStrings[0];
+        String name = subStrings[1];
+        int longitude = Integer.parseInt(subStrings[2]);
+        int latitude = Integer.parseInt(subStrings[3]);
+        int height = Integer.parseInt(subStrings[4]);
+        if (longitude < 0 || latitude < 0 || height < 0) {
+            throw new SimulationException("Coordinates must be a positive integers.");
+        }
+        Coordinates coordinates = new Coordinates(longitude, latitude, height);
+        return AircraftFactory.newAircraft(type, name, coordinates);
+    }
 }

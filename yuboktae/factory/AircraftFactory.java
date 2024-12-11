@@ -19,7 +19,7 @@ public class AircraftFactory {
             case "baloon" -> aircraft = new Baloon(uniqueId, p_name, p_coordinates);
             case "jetplane" -> aircraft = new JetPlane(uniqueId, p_name, p_coordinates);
             case "helicopter" -> aircraft =  new Helicopter(uniqueId, p_name, p_coordinates);
-            default -> throw new IllegalArgumentException("Unknown aircraft" + p_type);
+            default -> throw new IllegalArgumentException("Unknown aircraft: " + p_type);
         }
         return aircraft;
     }
