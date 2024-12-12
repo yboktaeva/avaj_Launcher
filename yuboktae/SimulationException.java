@@ -3,10 +3,10 @@ package yuboktae;
 
 public class SimulationException extends Exception {
     public SimulationException(String message) {
-        super(message);
+        super("Simulation error: " + message);
     }
 
     public SimulationException(String message, Throwable cause) {
-        super(message, cause);
+        super("Simulation error: " + message, cause);
     }
 }

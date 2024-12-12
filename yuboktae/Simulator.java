@@ -32,7 +32,7 @@ public class Simulator {
         try {
             simulator.parseAndProcessFile(filePath);
         } catch (FileNotFoundException | SimulationException | IllegalArgumentException e) {
-            System.err.println("Error: " + e.getMessage());
+            System.err.println(e.getMessage());
             System.exit(1);
         }
     }
@@ -76,7 +76,7 @@ public class Simulator {
             Tracker.log("END OF SIMULATION");
             Tracker.closeFile();
         } catch (SimulationException e) {
-            System.err.println("Error: " + e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
